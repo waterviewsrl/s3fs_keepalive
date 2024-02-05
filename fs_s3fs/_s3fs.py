@@ -273,7 +273,7 @@ class S3FS(FS):
         endpoint_url=None,
         region=None,
         delimiter="/",
-        strict=True,
+        strict=False,
         cache_control=None,
         acl=None,
         upload_args=None,
