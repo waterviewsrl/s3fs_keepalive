@@ -15,6 +15,7 @@ import threading
 import mimetypes
 
 import boto3
+import botocore
 from botocore.exceptions import ClientError, EndpointConnectionError
 
 import six
@@ -377,13 +378,22 @@ class S3FS(FS):
     @property
     def client(self):
         if not hasattr(self._tlocal, "client"):
-            self._tlocal.client = boto3.client(
+            
+            self._tlocal.client = boto3.session.Session().client(
                 "s3",
                 region_name=self.region,
                 aws_access_key_id=self.aws_access_key_id,
                 aws_secret_access_key=self.aws_secret_access_key,
                 aws_session_token=self.aws_session_token,
                 endpoint_url=self.endpoint_url,
+                config=botocore.client.Config(
+                tcp_keepalive=True,
+                max_pool_connections=20,
+                retries={
+                    "max_attempts": 6,
+                    "mode": "adaptive",
+        },
+    )
             )
         return self._tlocal.client
 
