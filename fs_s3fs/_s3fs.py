@@ -388,7 +388,7 @@ class S3FS(FS):
                 endpoint_url=self.endpoint_url,
                 config=botocore.client.Config(
                 tcp_keepalive=True,
-                max_pool_connections=4,
+                max_pool_connections=1,
                 retries={
                     "max_attempts": 6,
                     "mode": "adaptive",
